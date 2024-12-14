@@ -1,7 +1,7 @@
 with open('test.txt') as f:
     lines = f.read().splitlines()
 
-grid = [[None for _ in range(len(lines[0])+6)] for _ in range(len(lines)+6)]
+grid = [['' for _ in range(len(lines[0])+6)] for _ in range(len(lines)+6)]
 
 for i, line in enumerate(lines):
     for j in range(0, len(line)):
@@ -21,4 +21,16 @@ def find_xmas(grid):
     print(count)
 
 
+def find_masx(grid):
+    count = 0
+    for i in range(0, len(grid)):
+        for j in range(0, len(grid[i])):
+            if grid[i][j] == 'A':
+                if (grid[i+1][j+1] == 'M' and grid[i-1][j-1] == 'S') or (grid[i+1][j+1] == 'S' and grid[i-1][j-1] == 'M'):
+                    if (grid[i-1][j+1] == 'M' and grid[i+1][j-1] == 'S') or (grid[i-1][j+1] == 'S' and grid[i+1][j-1] == 'M'):
+                        count += 1
+    print(count)
+
 find_xmas(grid)
+
+find_masx(grid)
