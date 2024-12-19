@@ -3,32 +3,52 @@ with open('test.txt') as f:
     rules, page_numbers = chunks[0], chunks[1]
     rules_list = rules.splitlines()
     rules_list = [rule.split("|") for rule in rules_list]
-    page_numbers_list = page_numbers.splitlines()
-    page_numbers_list = [page.split(",") for page in page_numbers_list]
+    page_numbers_list = [page.split(",") for page in page_numbers.splitlines()]
 
-def check_rule(rules_list, page_numbers_list):
-    correct_ordered_pages = []
-    for pages in page_numbers_list:
-        correct = True
-        for i, page in enumerate(pages):
-            for rule in rules_list:
-                if rule[0] == page:
-                    if rule[1] in pages[:i]:
-                       correct = False
+def check_rule(rules_list, pages):
+    for rule in rules_list:
 
-        if correct:
-            correct_ordered_pages.append(pages) 
-    return correct_ordered_pages
+        if rule[0] not in pages or rule[1] not in pages:
+            continue
 
-def sum_middle_pages(correct_ordered_pages):
-    pages_sum = 0
+        first = pages.index(rule[0])
+        second = pages.index(rule[1])
 
-    for pages in correct_ordered_pages:
-        middle_page = len(pages) // 2
-        pages_sum += int(pages[middle_page])
-    return pages_sum
+        if first > second:
+            return False
+    return True
+
+def get_middle_page(pages):
+    middle_page = len(pages) // 2
+    return pages[middle_page]
+
+def reorder_pages(rules_list, pages):
+    i = 0
+    while i < len(rules_list):
+        rule = rules_list[i]
+
+        if rule[0] not in pages or rule[1] not in pages:
+            i += 1
+            continue
+
+        first = pages.index(rule[0])
+        second = pages.index(rule[1])
+
+        if first < second:
+            i += 1
+            continue
+
+        save = pages[first]
+        pages[first] = pages[second]
+        pages[second] = save
+
+        i = 0
+
+    return pages
 
 
-print(check_rule(rules_list, page_numbers_list))
+total_sum_p1 = sum([int(get_middle_page(pages)) for pages in page_numbers_list if check_rule(rules_list, pages)])
 
-print(sum_middle_pages(check_rule(rules_list, page_numbers_list)))
+total_sum_p2 = sum([int(get_middle_page(reorder_pages(rules_list, pages))) for pages in page_numbers_list if not check_rule(rules_list, pages)])
+
+print(total_sum_p1, total_sum_p2)
