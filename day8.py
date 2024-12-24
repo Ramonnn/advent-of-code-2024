@@ -45,6 +45,32 @@ def find_antinodes(coordinates):
                         nodes.add(node)
     return nodes
 
+def find_antinodes_part_2(coordinates):
+    nodes = set()
+    for i in range(0, len(coordinates)-1):
+        for j in range(i+1, len(coordinates)):
+            difference = (coordinates[i][0] - coordinates[j][0], coordinates[i][1] - coordinates[j][1])
+            node = (coordinates[i][0] - difference[0], coordinates[i][1] - difference[1])
+            while 0 <= node[0] < len(grid[0]) and 0 <= node[1] < len(grid):
+                nodes.add(node)
+                node = (node[0] - difference[0], node[1] - difference[1])
+
+            node = (coordinates[j][0] - difference[0], coordinates[j][1] - difference[1])
+            while 0 <= node[0] < len(grid[0]) and 0 <= node[1] < len(grid):
+                nodes.add(node)
+                node = (node[0] - difference[0], node[1] - difference[1])
+
+            node = (coordinates[j][0] + difference[0], coordinates[j][1] + difference[1])
+            while 0 <= node[0] < len(grid[0]) and 0 <= node[1] < len(grid):
+                nodes.add(node)
+                node = (node[0] + difference[0], node[1] + difference[1])
+
+            node = (coordinates[i][0] + difference[0], coordinates[i][1] + difference[1])
+            while 0 <= node[0] < len(grid[0]) and 0 <= node[1] < len(grid):
+                nodes.add(node)
+                node = (node[0] + difference[0], node[1] + difference[1])
+
+    return nodes
 #print(*grid, sep='\n')
 #print(find_unique(grid))
 #print(find_antenna(grid))
@@ -59,7 +85,7 @@ for coordinates in all_antenna.values():
         flat_coordinates.append(coordinate)
 
 for antenna, coordinates in all_antenna.items():
-    antinodes = find_antinodes(coordinates)
+    antinodes = find_antinodes_part_2(coordinates)
     for antinode in antinodes:
         all_antinodes.add(antinode)
 
